@@ -1,6 +1,6 @@
-# Asistente por WhatsApp para papá — Spec SDD v0.3
+# Asistente por WhatsApp para papá — Spec SDD v0.4
 
-27 oct 2026 (v0.1) · 28 oct 2026 (v0.2, primera ronda de clarify) · 28 oct 2026 (v0.3, A4, A8 y A9 confirmadas) · @tato
+27 oct 2026 (v0.1) · 28 oct 2026 (v0.2, primera ronda de clarify) · 28 oct 2026 (v0.3, A4, A8 y A9 confirmadas) · 28 oct 2026 (v0.4, A1, A7 y A11) · @tato
 
 ## Contexto
 
@@ -11,7 +11,7 @@ Pedido original: que mediante audios de WhatsApp se generen planillas y automati
 - **Usuario principal:** papá, concejal en Villa Gesell. También participa del día a día del taller (A2).
 - **Usuario secundario:** Tato. Revisa, corrige, recibe delegaciones y mantiene el sistema. Es el único delegado (A6).
 - **Celular de papá:** Android. Hoy no usa ningún calendario (A3).
-- **Fase SDD actual:** clarify (quedan abiertas A10, A11 y detalles de A1 y A7; para P1 solo falta A10). Este doc define qué hace y por qué; el cómo (canal, base de datos, transcripción) se decide en plan.
+- **Fase SDD actual:** clarify (solo queda abierta A10, que es lo único que falta para cerrar P1). Este doc define qué hace y por qué; el cómo (canal, base de datos, transcripción) se decide en plan.
 - **Cómo leerlo:** P1 es el MVP y se entrega solo; P2 y P3 entran cuando lo anterior se usa a diario. Las marcas [ACLARAR Ax] remiten a la última sección.
 
 Él solo manda y recibe por WhatsApp; todo lo del medio es trabajo del sistema, y Tato lo supervisa desde un panel.
@@ -78,7 +78,9 @@ Como papá, quiero un solo mensaje temprano con lo del día, para arrancar sin r
 
 ## Historias P2: que no se le escape nada con la gente
 
-P2 convierte capturas en seguimiento de personas y promesas, que es donde un concejal más pierde. Entra cuando P1 se usa a diario; escenarios y pruebas se detallan cuando cada historia sea la próxima. El orden dentro de P2 depende del ámbito que más pese [ACLARAR A1].
+P2 convierte capturas en seguimiento de personas y promesas, que es donde más se pierde, en el taller y en el Concejo. Entra cuando P1 se usa a diario; escenarios y pruebas se detallan cuando cada historia sea la próxima.
+
+**Orden de entrega (A1: el taller es lo que más pesa):** H5 → H9 → H7 → H8 → H10 → H6. Primero lo que le sirve al taller (lo que prometió a clientes y espera de proveedores, fichas de clientes, fotos de autos y presupuestos reenviados); H6, que es solo del Concejo, va al final.
 
 ### H5. Compromisos en los dos sentidos
 
@@ -114,7 +116,7 @@ P3 son las ideas de más valor, pero dependen de que P1 y P2 funcionen. Se detal
 | H12. Minuta al salir | Un audio de 2 minutos al salir de una reunión queda como minuta: quiénes, temas y acuerdos. Cada acuerdo pasa a compromiso. | H5 |
 | H13. Delegar | "Pasale a Tato lo de la ordenanza de playa" le llega a Tato con contexto; cuando Tato lo cierra, papá recibe aviso. Tato es el único delegado (A6). | H5 |
 | H14. Proyectos del Concejo | Ideas y proyectos con estado: idea, en redacción, presentado, en comisión, aprobado o rechazado. | H8 |
-| H15. Taller | Novedades de autos y casos por audio, escritas en el sistema del taller que ya existe, sin duplicar datos. **Sigue en alcance: papá participa del taller (A2).** Falta relevar qué sistema usa el taller hoy [ACLARAR A11]. | A11 |
+| H15. Taller | Novedades de autos y casos por audio, escritas en la app del taller que está desarrollando Tato (A11), sin duplicar datos. Es la primera de P3 porque el taller es lo que más pesa (A1). El Excel actual no se integra: lo reemplaza esa app. | H5, H9, app del taller |
 | H16. Vencimientos y gastos | Seguro, patente, VTV y servicios con aviso previo; gastos por audio o con foto del ticket. | H3, H7 |
 
 ## Casos borde
@@ -187,7 +189,7 @@ El éxito se mide por uso real, no por funciones: si a las 2 semanas no lo usa s
 | CE-04 | Compromisos vencidos sin al menos un aviso previo | 0 |
 | CE-05 | Mensajes a terceros sin alta explícita | 0 |
 | CE-06 | Explicación necesaria para que lo use solo | 5 minutos como máximo |
-| CE-07 | Costo mensual total | Lo mínimo posible (A7). Propuesta: tope de USD 10/mes, a validar con números reales en plan |
+| CE-07 | Costo mensual total | Lo mínimo posible (A7): el plan elige, en cada pieza, la opción más barata que cumpla CE-03 y muestra el costo mensual estimado antes de implementar |
 
 ## Fuera de alcance v1
 
@@ -203,16 +205,17 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 
 ## Aclaraciones
 
-### Resueltas (v0.2 y v0.3, 28/10/2026)
+### Resueltas (v0.2 a v0.4, 28/10/2026)
 
 | ID | Pregunta | Respuesta | Impacto en el spec |
 |---|---|---|---|
-| A1 | Ámbitos | Concejo, taller y personal. | RF-04 asigna ámbito a cada ítem; se suma "sin definir" para no preguntar de más. **Falta saber cuál pesa más** (ver abiertas). |
+| A1 | Ámbitos | Concejo, taller y personal. | RF-04 asigna ámbito a cada ítem; se suma "sin definir" para no preguntar de más. El que más pesa es el **taller** (v0.4): define el orden de P2 y pone H15 primera en P3. |
 | A2 | ¿Participa del taller? | Sí, participa. | H15 sigue en alcance (P3). Escenario H1.5 de ámbito taller. |
 | A3 | Calendario y celular | No usa calendario. Android. | Avisos solo por WhatsApp. Se elimina H3 escenario 3 y la sincronización con calendario pasa a fuera de alcance. |
 | A5 | ¿Texto o audio? | Mensajes concisos, sin vueltas. | Nueva sección "Estilo de las respuestas"; respuestas solo en texto. |
 | A6 | Delegados | Solo Tato. | RF-11 y entidad Delegado limitados a Tato. Secretaria y asesor quedan afuera; sumarlos requiere alta explícita. |
-| A7 | Presupuesto | Lo mínimo posible; pregunta si se puede usar la cuenta de Claude de Tato. | CE-07 con tope propuesto. Ver nota abajo. |
+| A7 | Presupuesto | Lo mínimo posible, sin tope fijo (v0.4); pregunta si se puede usar la cuenta de Claude de Tato. | CE-07 como criterio de costo mínimo. Ver nota abajo. |
+| A11 | Sistema del taller | Hoy, un Excel muy básico; Tato está desarrollando una app para el taller (v0.4). | H15 escribe en esa app, no en el Excel. El plan decide cómo se conectan las dos sin duplicar datos (por ejemplo, que el asistente le pase los datos a la app y no guarde una copia propia de autos y clientes). |
 | A8 | Conservación de originales | Lo necesario; confirmada la propuesta de 90 días (v0.3). | RF-14 con plazo concreto. Detalle abajo. |
 | A4 | Resumen de la mañana | Confirmada la propuesta (v0.3): 7:30, lunes a viernes; un día sin nada, silencio. | H4 y RF-10 con hora y días fijos. |
 | A9 | Horarios por defecto | Confirmada la propuesta (v0.3): mañana 9:00, tarde 17:00, noche 21:00; eventos avisan 1 hora antes, recordatorios a la hora exacta. | H3 sin marcas pendientes. |
@@ -227,14 +230,11 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 
 ### Abiertas
 
-- [ ] **A1 (resto).** ¿Cuál de los tres ámbitos pesa más en su día? Define el orden de P2: si es el Concejo, arranca por H5 y H6; si es el taller, conviene adelantar el relevamiento de A11.
-- [ ] **A7 (resto).** Confirmar el tope mensual propuesto (USD 10) o fijar otro.
 - [ ] **A10. Audios reales.** 5 a 10 audios como se los mandaría a una secretaria, idealmente mezclando Concejo, taller y personal. Pasan a ser los escenarios de aceptación de H1. **Es lo único que bloquea cerrar P1.**
-- [ ] **A11. Sistema del taller (nueva).** ¿Qué usa hoy el taller para registrar autos y trabajos (planilla, programa, cuaderno)? Solo hace falta para H15; no bloquea P1 ni P2.
 
 ## Próximos pasos SDD
 
-1. **Clarify:** conseguir los audios de A10 (lo único que falta para P1) y cerrar el resto de las abiertas, idealmente con papá presente.
+1. **Clarify:** conseguir los audios de A10 (lo único que falta para P1), con más audios de taller porque es lo que más pesa.
 2. **Plan:** arquitectura técnica con criterio KISS (canal, base de datos, transcripción, panel y costos reales de A7), validada contra la constitución.
 3. **Tasks:** dividir P1 en tareas chicas y verificables.
 4. **Implement:** P1 con Claude Code, una tarea a la vez, probando contra los escenarios.
