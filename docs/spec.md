@@ -1,12 +1,12 @@
-# Asistente por WhatsApp para papá — Spec SDD v0.4
+# Asistente por Telegram para papá — Spec SDD v0.5
 
-27 oct 2026 (v0.1) · 28 oct 2026 (v0.2, primera ronda de clarify) · 28 oct 2026 (v0.3, A4, A8 y A9 confirmadas) · 28 oct 2026 (v0.4, A1, A7 y A11) · @tato
+27 oct 2026 (v0.1) · 28 oct 2026 (v0.2, primera ronda de clarify) · 28 oct 2026 (v0.3, A4, A8 y A9 confirmadas) · 28 oct 2026 (v0.4, A1, A7 y A11) · 28 oct 2026 (v0.5, canal Telegram y costo cero) · @tato
 
 ## Contexto
 
-Un asistente por WhatsApp al que papá le habla como a una secretaria. Él suelta lo que tiene en la cabeza; el sistema lo ordena y se lo devuelve cuando hace falta.
+Un asistente por Telegram al que papá le habla como a una secretaria. Él suelta lo que tiene en la cabeza; el sistema lo ordena y se lo devuelve cuando hace falta.
 
-Pedido original: que mediante audios de WhatsApp se generen planillas y automatizaciones que le saquen de encima toda esa información. Tiene que ser muy fácil de usar: tiene 53 años y ya domina los audios.
+Pedido original: que mediante audios de WhatsApp se generen planillas y automatizaciones que le saquen de encima toda esa información. Tiene que ser muy fácil de usar: tiene 53 años y ya domina los audios. El canal pasó de WhatsApp a Telegram en v0.5 para que cueste cero (ver "Canal y costo"); los audios se mandan igual.
 
 - **Usuario principal:** papá, concejal en Villa Gesell. También participa del día a día del taller (A2).
 - **Usuario secundario:** Tato. Revisa, corrige, recibe delegaciones y mantiene el sistema. Es el único delegado (A6).
@@ -14,9 +14,18 @@ Pedido original: que mediante audios de WhatsApp se generen planillas y automati
 - **Fase SDD actual:** clarify (solo queda abierta A10, que es lo único que falta para cerrar P1). Este doc define qué hace y por qué; el cómo (canal, base de datos, transcripción) se decide en plan.
 - **Cómo leerlo:** P1 es el MVP y se entrega solo; P2 y P3 entran cuando lo anterior se usa a diario. Las marcas [ACLARAR Ax] remiten a la última sección.
 
-Él solo manda y recibe por WhatsApp; todo lo del medio es trabajo del sistema, y Tato lo supervisa desde un panel.
+Él solo manda y recibe por un chat de Telegram; todo lo del medio es trabajo del sistema, y Tato lo supervisa desde un panel.
 
 La constitución vive en [`constitucion.md`](constitucion.md).
+
+## Canal y costo (v0.5)
+
+Tato pidió costo cero. Desde el 1/10/2026 la API oficial de WhatsApp cobraría cada mensaje que manda el asistente, incluidas las confirmaciones (unos USD 24/mes estimados; según fuentes secundarias, sin confirmar en Meta), y conectar WhatsApp por vías no oficiales viola el principio 7. Por eso el canal es **un bot de Telegram**:
+
+- Es oficial y gratis, y no tiene ventana de 24 h: avisos y resumen salen sin costo a cualquier hora.
+- Los audios, las respuestas citando un mensaje y los reenvíos funcionan igual que en WhatsApp.
+- El costo: papá tiene que instalar Telegram. Tato se lo deja instalado, con su número y con el chat del asistente fijado arriba. Es la única excepción al principio 1 y quedó anotada en la constitución.
+- Riesgo a vigilar: que no lo abra porque vive en WhatsApp. Las notificaciones de Telegram tienen que quedar activadas y con sonido; CE-01 mide si lo usa.
 
 ## Estilo de las respuestas (A5)
 
@@ -59,11 +68,11 @@ Como papá, quiero corregir como corregiría a una persona, para confiar en lo q
 Como papá, quiero que lo que tiene día y hora me avise solo, para no depender de acordarme.
 
 - **Prueba independiente:** 5 eventos y 5 recordatorios; los 10 avisan a tiempo.
-- **Canal de avisos (A3):** **por WhatsApp**, en el mismo chat del asistente. Como no usa calendario, no se integra ninguno en P1: sumarle una app nueva va contra el principio 1.
+- **Canal de avisos (A3):** **por Telegram**, en el mismo chat del asistente. Como no usa calendario, no se integra ninguno en P1: sumarle una app nueva va contra el principio 1.
 - **Escenarios:**
   1. Dice "recordame mañana a la tarde llamar a la escuela". Queda para mañana a las 17:00 (horario por defecto, A9) y la confirmación lo dice.
   2. Carga un evento que choca con otro. Lo avisa al confirmar.
-  3. ~~Cada evento aparece también en el calendario de su celular.~~ Eliminado en v0.2 (A3). Cada evento avisa por WhatsApp 1 hora antes; los recordatorios avisan a la hora exacta (A9).
+  3. ~~Cada evento aparece también en el calendario de su celular.~~ Eliminado en v0.2 (A3). Cada evento avisa por Telegram 1 hora antes; los recordatorios avisan a la hora exacta (A9).
 
 ### H4. Resumen de la mañana
 
@@ -104,7 +113,7 @@ Cada persona mencionada tiene una ficha: quién es, cómo ubicarla si se dijo, h
 
 ### H10. Planillas a pedido
 
-"Mandame en Excel los pedidos de octubre" devuelve el archivo por WhatsApp. Cualquier listado sale en Excel o PDF: el Excel del pedido original vuelve como salida.
+"Mandame en Excel los pedidos de octubre" devuelve el archivo por Telegram. Cualquier listado sale en Excel o PDF: el Excel del pedido original vuelve como salida.
 
 ## Historias P3: que trabaje por él
 
@@ -139,7 +148,7 @@ Veinte requisitos; los quince P1 son el contrato del MVP.
 
 | ID | Requisito | Prioridad |
 |---|---|---|
-| RF-01 | DEBE recibir audios y textos del número de papá; fotos, PDF y reenvíos desde P2. | P1 |
+| RF-01 | DEBE recibir audios y textos de la cuenta de Telegram de papá; fotos, PDF y reenvíos desde P2. | P1 |
 | RF-02 | DEBE transcribir español rioplatense, incluidas calles de Villa Gesell (avenidas y paseos). | P1 |
 | RF-03 | DEBE separar un audio en varios ítems cuando trae varias cosas. | P1 |
 | RF-04 | DEBE clasificar cada ítem como evento, recordatorio, pendiente o nota, y asignarle ámbito (Concejo, taller, personal o sin definir); compromiso, pedido, contacto y gasto se suman por etapa. | P1 |
@@ -147,7 +156,7 @@ Veinte requisitos; los quince P1 son el contrato del MVP.
 | RF-06 | DEBE confirmar cada captura en un mensaje corto de texto (A5), dentro del tiempo de CE-03. | P1 |
 | RF-07 | DEBE permitir corregir, completar, marcar hecho y deshacer por voz o texto; citando una confirmación, aplica a ese ítem. | P1 |
 | RF-08 | DEBE preguntar antes de guardar si duda de fecha, hora, persona o monto. | P1 |
-| RF-09 | DEBE avisar eventos y recordatorios a tiempo **por WhatsApp** (A3). | P1 |
+| RF-09 | DEBE avisar eventos y recordatorios a tiempo **por Telegram** (A3). | P1 |
 | RF-10 | DEBE mandar el resumen de la mañana a las 7:30, de lunes a viernes, y no mandarlo si el día no tiene nada (A4). | P1 |
 | RF-11 | NO DEBE escribirle a nadie más que a papá y a Tato (único delegado, A6). | P1 |
 | RF-12 | DEBE darle a Tato una vista para revisar, corregir y exportar todo. | P1 |
@@ -157,7 +166,7 @@ Veinte requisitos; los quince P1 son el contrato del MVP.
 | RF-16 | DEBE responder consultas solo con lo cargado y decir cuando no tiene datos. | P2 |
 | RF-17 | DEBE vincular cada mención de persona a una ficha única y preguntar ante ambigüedad. | P2 |
 | RF-18 | DEBE llevar el estado de cada pedido de vecino y recordar avisarle al vecino al resolverse. | P2 |
-| RF-19 | DEBE generar Excel o PDF de cualquier listado a pedido y mandarlo por WhatsApp. | P2 |
+| RF-19 | DEBE generar Excel o PDF de cualquier listado a pedido y mandarlo por Telegram. | P2 |
 | RF-20 | DEBE exportar o borrar todos los datos de una persona a pedido. | P2 |
 
 ## Entidades clave
@@ -168,7 +177,7 @@ Todo nace de una captura: lo que él mandó, y los ítems y personas que saliero
 |---|---|
 | Captura | El mensaje original (audio, texto, foto, PDF, reenvío), su transcripción, la fecha y los ítems que generó. |
 | Ítem | Tipo, texto, fecha y hora, estado, ámbito (Concejo, taller, personal, sin definir), personas vinculadas y captura de origen. |
-| Evento o recordatorio | Ítem con fecha y hora y aviso previo por WhatsApp. |
+| Evento o recordatorio | Ítem con fecha y hora y aviso previo por Telegram. |
 | Pendiente | Ítem sin fecha obligatoria; abierto o hecho. |
 | Compromiso | Quién le debe a quién (él o el otro), qué, para cuándo y estado. |
 | Pedido de vecino | Vecino, ubicación, tema, área a la que se derivó, estado y si se le avisó. |
@@ -188,8 +197,8 @@ El éxito se mide por uso real, no por funciones: si a las 2 semanas no lo usa s
 | CE-03 | Tiempo hasta la confirmación, audios de hasta 1 minuto | Menos de 30 s en 95 de cada 100 |
 | CE-04 | Compromisos vencidos sin al menos un aviso previo | 0 |
 | CE-05 | Mensajes a terceros sin alta explícita | 0 |
-| CE-06 | Explicación necesaria para que lo use solo | 5 minutos como máximo |
-| CE-07 | Costo mensual total | Lo mínimo posible (A7): el plan elige, en cada pieza, la opción más barata que cumpla CE-03 y muestra el costo mensual estimado antes de implementar |
+| CE-06 | Explicación necesaria para que lo use solo, con Telegram ya instalado por Tato | 5 minutos como máximo |
+| CE-07 | Costo mensual total | USD 0 (A7, v0.5): solo planes gratuitos; si una pieza deja de ser gratis, se avisa antes de pagar nada |
 
 ## Fuera de alcance v1
 
@@ -199,7 +208,7 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 - Charlar o responder preguntas generales: no es un chatbot.
 - Redactar proyectos completos: registra la idea y el estado; la redacción sigue en manos de Tato.
 - Pagar, cobrar o mover plata.
-- Leer sus otros chats de WhatsApp.
+- Leer sus otros chats, de Telegram, WhatsApp o cualquier otra app.
 - Sincronizar con un calendario (Google Calendar u otro): no usa ninguno (A3). Se reconsidera solo si él lo pide.
 - Responder con audios: prefiere texto (A5).
 
@@ -211,7 +220,7 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 |---|---|---|---|
 | A1 | Ámbitos | Concejo, taller y personal. | RF-04 asigna ámbito a cada ítem; se suma "sin definir" para no preguntar de más. El que más pesa es el **taller** (v0.4): define el orden de P2 y pone H15 primera en P3. |
 | A2 | ¿Participa del taller? | Sí, participa. | H15 sigue en alcance (P3). Escenario H1.5 de ámbito taller. |
-| A3 | Calendario y celular | No usa calendario. Android. | Avisos solo por WhatsApp. Se elimina H3 escenario 3 y la sincronización con calendario pasa a fuera de alcance. |
+| A3 | Calendario y celular | No usa calendario. Android. | Avisos solo por el chat del asistente (Telegram desde v0.5). Se elimina H3 escenario 3 y la sincronización con calendario pasa a fuera de alcance. |
 | A5 | ¿Texto o audio? | Mensajes concisos, sin vueltas. | Nueva sección "Estilo de las respuestas"; respuestas solo en texto. |
 | A6 | Delegados | Solo Tato. | RF-11 y entidad Delegado limitados a Tato. Secretaria y asesor quedan afuera; sumarlos requiere alta explícita. |
 | A7 | Presupuesto | Lo mínimo posible, sin tope fijo (v0.4); pregunta si se puede usar la cuenta de Claude de Tato. | CE-07 como criterio de costo mínimo. Ver nota abajo. |
@@ -224,7 +233,7 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 
 - **Construirlo (fase implement):** sí. La suscripción de Claude de Tato sirve para usar Claude Code y escribir el sistema.
 - **Que funcione todos los días:** no con la suscripción. El asistente corre solo, 24 horas, respondiendo mensajes sin nadie frente a la compu; eso necesita una clave de la API de Anthropic, que se paga aparte, por uso. La suscripción es para uso personal en las apps de Claude y no se puede conectar a un servicio automático. Con un modelo chico y el volumen esperado (decenas de mensajes por día), el costo de la IA debería ser bajo; el número real se calcula en plan.
-- **Otros costos a estimar en plan:** la transcripción de audio (es un servicio aparte: hay opciones con capa gratuita), la API oficial de WhatsApp (los mensajes que inicia el sistema fuera de una conversación abierta, como el resumen de la mañana y los avisos, se cobran por mensaje), el hosting y el número propio del asistente (principio 7).
+- **Decisión final (v0.5):** costo cero. La IA corre en la capa gratuita de Groq en lugar de la API de Claude, y el canal es Telegram (ver "Canal y costo").
 
 **Detalle de A8.** Audios y fotos originales se guardan **90 días** después de que el ítem se cierra (hecho o borrado), y después se borran solos; la transcripción y el ítem quedan. Alcanza para revisar errores y para la muestra semanal de CE-02 sin acumular datos de terceros de más (principio 7). Tato puede marcar un original como "conservar".
 
