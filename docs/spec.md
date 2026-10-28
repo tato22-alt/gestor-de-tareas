@@ -1,6 +1,6 @@
-# Asistente por WhatsApp para papá — Spec SDD v0.2
+# Asistente por WhatsApp para papá — Spec SDD v0.3
 
-27 oct 2026 (v0.1) · 28 oct 2026 (v0.2, primera ronda de clarify) · @tato
+27 oct 2026 (v0.1) · 28 oct 2026 (v0.2, primera ronda de clarify) · 28 oct 2026 (v0.3, A4, A8 y A9 confirmadas) · @tato
 
 ## Contexto
 
@@ -11,7 +11,7 @@ Pedido original: que mediante audios de WhatsApp se generen planillas y automati
 - **Usuario principal:** papá, concejal en Villa Gesell. También participa del día a día del taller (A2).
 - **Usuario secundario:** Tato. Revisa, corrige, recibe delegaciones y mantiene el sistema. Es el único delegado (A6).
 - **Celular de papá:** Android. Hoy no usa ningún calendario (A3).
-- **Fase SDD actual:** clarify (primera ronda cerrada, quedan abiertas A4, A9, A10 y detalles de A1, A7 y A8). Este doc define qué hace y por qué; el cómo (canal, base de datos, transcripción) se decide en plan.
+- **Fase SDD actual:** clarify (quedan abiertas A10, A11 y detalles de A1 y A7; para P1 solo falta A10). Este doc define qué hace y por qué; el cómo (canal, base de datos, transcripción) se decide en plan.
 - **Cómo leerlo:** P1 es el MVP y se entrega solo; P2 y P3 entran cuando lo anterior se usa a diario. Las marcas [ACLARAR Ax] remiten a la última sección.
 
 Él solo manda y recibe por WhatsApp; todo lo del medio es trabajo del sistema, y Tato lo supervisa desde un panel.
@@ -61,9 +61,9 @@ Como papá, quiero que lo que tiene día y hora me avise solo, para no depender 
 - **Prueba independiente:** 5 eventos y 5 recordatorios; los 10 avisan a tiempo.
 - **Canal de avisos (A3):** **por WhatsApp**, en el mismo chat del asistente. Como no usa calendario, no se integra ninguno en P1: sumarle una app nueva va contra el principio 1.
 - **Escenarios:**
-  1. Dice "recordame mañana a la tarde llamar a la escuela". Queda para mañana a las 17:00 (horario por defecto, [ACLARAR A9]) y la confirmación lo dice.
+  1. Dice "recordame mañana a la tarde llamar a la escuela". Queda para mañana a las 17:00 (horario por defecto, A9) y la confirmación lo dice.
   2. Carga un evento que choca con otro. Lo avisa al confirmar.
-  3. ~~Cada evento aparece también en el calendario de su celular.~~ Eliminado en v0.2 (A3). Cada evento avisa por WhatsApp con anticipación [ACLARAR A9: propuesta 1 hora antes para eventos; recordatorios a la hora exacta].
+  3. ~~Cada evento aparece también en el calendario de su celular.~~ Eliminado en v0.2 (A3). Cada evento avisa por WhatsApp 1 hora antes; los recordatorios avisan a la hora exacta (A9).
 
 ### H4. Resumen de la mañana
 
@@ -71,9 +71,10 @@ Como papá, quiero un solo mensaje temprano con lo del día, para arrancar sin r
 
 - **Prueba independiente:** 5 días hábiles seguidos llega a horario y él no necesita preguntar nada más.
 - **Escenarios:**
-  1. A la hora acordada [ACLARAR A4] recibe: agenda del día, pendientes vencidos y lo que lleva más de 7 días sin moverse. Desde P2 suma los compromisos que vencen.
-  2. Un día sin nada no recibe un mensaje vacío [ACLARAR A4: propuesta, silencio].
-  3. El resumen agrupa por ámbito (Concejo, taller, personal) solo si hay ítems de más de uno.
+  1. A las 7:30, de lunes a viernes (A4), recibe: agenda del día, pendientes vencidos y lo que lleva más de 7 días sin moverse. Desde P2 suma los compromisos que vencen.
+  2. Un día sin nada no recibe ningún mensaje (A4).
+  3. Sábados y domingos no hay resumen; los avisos de eventos y recordatorios sí llegan.
+  4. El resumen agrupa por ámbito (Concejo, taller, personal) solo si hay ítems de más de uno.
 
 ## Historias P2: que no se le escape nada con la gente
 
@@ -145,11 +146,11 @@ Veinte requisitos; los quince P1 son el contrato del MVP.
 | RF-07 | DEBE permitir corregir, completar, marcar hecho y deshacer por voz o texto; citando una confirmación, aplica a ese ítem. | P1 |
 | RF-08 | DEBE preguntar antes de guardar si duda de fecha, hora, persona o monto. | P1 |
 | RF-09 | DEBE avisar eventos y recordatorios a tiempo **por WhatsApp** (A3). | P1 |
-| RF-10 | DEBE mandar el resumen de la mañana a la hora que defina A4. | P1 |
+| RF-10 | DEBE mandar el resumen de la mañana a las 7:30, de lunes a viernes, y no mandarlo si el día no tiene nada (A4). | P1 |
 | RF-11 | NO DEBE escribirle a nadie más que a papá y a Tato (único delegado, A6). | P1 |
 | RF-12 | DEBE darle a Tato una vista para revisar, corregir y exportar todo. | P1 |
 | RF-13 | NO DEBE perder capturas si algo falla: las encola, las procesa al volver y avisa. | P1 |
-| RF-14 | DEBE guardar el original (audio, foto, PDF) vinculado a cada ítem durante el plazo de A8. | P1 |
+| RF-14 | DEBE guardar el original (audio, foto, PDF) vinculado a cada ítem hasta 90 días después de cerrado el ítem, salvo que Tato lo marque para conservar (A8). | P1 |
 | RF-15 | DEBE rechazar en una línea lo que está fuera de alcance. | P1 |
 | RF-16 | DEBE responder consultas solo con lo cargado y decir cuando no tiene datos. | P2 |
 | RF-17 | DEBE vincular cada mención de persona a una ficha única y preguntar ante ambigüedad. | P2 |
@@ -202,7 +203,7 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 
 ## Aclaraciones
 
-### Resueltas en v0.2 (28/10/2026)
+### Resueltas (v0.2 y v0.3, 28/10/2026)
 
 | ID | Pregunta | Respuesta | Impacto en el spec |
 |---|---|---|---|
@@ -212,7 +213,9 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 | A5 | ¿Texto o audio? | Mensajes concisos, sin vueltas. | Nueva sección "Estilo de las respuestas"; respuestas solo en texto. |
 | A6 | Delegados | Solo Tato. | RF-11 y entidad Delegado limitados a Tato. Secretaria y asesor quedan afuera; sumarlos requiere alta explícita. |
 | A7 | Presupuesto | Lo mínimo posible; pregunta si se puede usar la cuenta de Claude de Tato. | CE-07 con tope propuesto. Ver nota abajo. |
-| A8 | Conservación de originales | Lo necesario. | Propuesta concreta abajo, a confirmar. |
+| A8 | Conservación de originales | Lo necesario; confirmada la propuesta de 90 días (v0.3). | RF-14 con plazo concreto. Detalle abajo. |
+| A4 | Resumen de la mañana | Confirmada la propuesta (v0.3): 7:30, lunes a viernes; un día sin nada, silencio. | H4 y RF-10 con hora y días fijos. |
+| A9 | Horarios por defecto | Confirmada la propuesta (v0.3): mañana 9:00, tarde 17:00, noche 21:00; eventos avisan 1 hora antes, recordatorios a la hora exacta. | H3 sin marcas pendientes. |
 
 **Nota sobre A7 (¿se puede usar la cuenta de Claude?).** Hay que separar dos usos:
 
@@ -220,21 +223,18 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 - **Que funcione todos los días:** no con la suscripción. El asistente corre solo, 24 horas, respondiendo mensajes sin nadie frente a la compu; eso necesita una clave de la API de Anthropic, que se paga aparte, por uso. La suscripción es para uso personal en las apps de Claude y no se puede conectar a un servicio automático. Con un modelo chico y el volumen esperado (decenas de mensajes por día), el costo de la IA debería ser bajo; el número real se calcula en plan.
 - **Otros costos a estimar en plan:** la transcripción de audio (es un servicio aparte: hay opciones con capa gratuita), la API oficial de WhatsApp (los mensajes que inicia el sistema fuera de una conversación abierta, como el resumen de la mañana y los avisos, se cobran por mensaje), el hosting y el número propio del asistente (principio 7).
 
-**Propuesta para A8.** Audios y fotos originales se guardan **90 días** después de que el ítem se cierra (hecho o borrado), y después se borran solos; la transcripción y el ítem quedan. Alcanza para revisar errores y para la muestra semanal de CE-02 sin acumular datos de terceros de más (principio 7). Tato puede marcar un original como "conservar".
+**Detalle de A8.** Audios y fotos originales se guardan **90 días** después de que el ítem se cierra (hecho o borrado), y después se borran solos; la transcripción y el ítem quedan. Alcanza para revisar errores y para la muestra semanal de CE-02 sin acumular datos de terceros de más (principio 7). Tato puede marcar un original como "conservar".
 
 ### Abiertas
 
 - [ ] **A1 (resto).** ¿Cuál de los tres ámbitos pesa más en su día? Define el orden de P2: si es el Concejo, arranca por H5 y H6; si es el taller, conviene adelantar el relevamiento de A11.
-- [ ] **A4. Resumen.** ¿A qué hora? ¿También sábados y domingos? Propuesta: 7:30, lunes a viernes; un día sin nada, silencio.
 - [ ] **A7 (resto).** Confirmar el tope mensual propuesto (USD 10) o fijar otro.
-- [ ] **A8 (resto).** Confirmar la propuesta de 90 días.
-- [ ] **A9. Horarios por defecto.** "A la mañana", "a la tarde", "a la noche". Propuesta: 9:00, 17:00 y 21:00. Aviso de eventos: 1 hora antes.
 - [ ] **A10. Audios reales.** 5 a 10 audios como se los mandaría a una secretaria, idealmente mezclando Concejo, taller y personal. Pasan a ser los escenarios de aceptación de H1. **Es lo único que bloquea cerrar P1.**
 - [ ] **A11. Sistema del taller (nueva).** ¿Qué usa hoy el taller para registrar autos y trabajos (planilla, programa, cuaderno)? Solo hace falta para H15; no bloquea P1 ni P2.
 
 ## Próximos pasos SDD
 
-1. **Clarify:** cerrar las abiertas (A4, A9 y A10 son las que tocan P1), idealmente con papá presente.
+1. **Clarify:** conseguir los audios de A10 (lo único que falta para P1) y cerrar el resto de las abiertas, idealmente con papá presente.
 2. **Plan:** arquitectura técnica con criterio KISS (canal, base de datos, transcripción, panel y costos reales de A7), validada contra la constitución.
 3. **Tasks:** dividir P1 en tareas chicas y verificables.
 4. **Implement:** P1 con Claude Code, una tarea a la vez, probando contra los escenarios.
