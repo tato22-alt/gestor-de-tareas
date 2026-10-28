@@ -235,6 +235,6 @@ Lo que no hace aunque se lo pidan, para proteger la simplicidad y su nombre.
 ## Próximos pasos SDD
 
 1. **Clarify:** conseguir los audios de A10 (lo único que falta para P1), con más audios de taller porque es lo que más pesa.
-2. **Plan:** arquitectura técnica con criterio KISS (canal, base de datos, transcripción, panel y costos reales de A7), validada contra la constitución.
+2. **Plan:** ver [`plan.md`](plan.md) (stack definido el 28/10/2026).
 3. **Tasks:** dividir P1 en tareas chicas y verificables.
 4. **Implement:** P1 con Claude Code, una tarea a la vez, probando contra los escenarios.
