@@ -83,7 +83,7 @@ Como papá, quiero un solo mensaje temprano con lo del día, para arrancar sin r
   1. A las 7:30, de lunes a viernes (A4), recibe: agenda del día, pendientes vencidos y lo que lleva más de 7 días sin moverse. Desde P2 suma los compromisos que vencen.
   2. Un día sin nada no recibe ningún mensaje (A4).
   3. Sábados y domingos no hay resumen; los avisos de eventos y recordatorios sí llegan.
-  4. El resumen agrupa por ámbito (Concejo, taller, personal) solo si hay ítems de más de uno.
+  4. El resumen marca el ámbito de cada línea (Concejo, taller, personal) solo si hay ítems de más de uno.
 
 ## Historias P2: que no se le escape nada con la gente
 

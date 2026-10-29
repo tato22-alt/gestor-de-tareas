@@ -42,6 +42,9 @@ Cron (cada minuto) ──▶ avisos de eventos (1 h antes) y recordatorios (a la
 - **Hora argentina:** el Worker corre en UTC; todo se convierte con `America/Argentina/Buenos_Aires` (UTC−3, sin horario de verano). El modelo recibe la fecha y hora actuales con el día de la semana. El código, no el modelo, verifica que la fecha sea válida, que no quede en el pasado y que coincida el día de la semana dicho con el número.
 - **Formato de fechas:** lo arma el código, no el modelo: `jue 29/10 10:00`. Así el principio 2 no depende de que la IA escriba bien.
 - **Correcciones (H2):** cuando papá responde citando un mensaje, Telegram dice a cuál. Cada confirmación guarda su `message_id` y los ítems que contiene, así "no, era el viernes" va directo a ese ítem. Sin cita, se usa la última captura.
+- **Lo que tiene solo día** ("el lunes vence el seguro"): no tiene aviso propio de lunes a viernes, porque aparece en el resumen de las 7:30. Sábados y domingos avisa a las 9:00.
+- **Preguntas (RF-08):** si el modelo duda, o si el código encuentra un problema en la fecha (el día dicho no coincide con el número, la fecha ya pasó, "el martes" dicho un martes), no se guarda nada y se hace una sola pregunta. La respuesta que llega en los 30 minutos siguientes se interpreta junto con el mensaje original.
+- **Sin duplicados:** los cambios en la base y la respuesta decidida se guardan en una sola transacción antes de enviar. Si falla el envío, el reintento solo reenvía.
 - **Solo papá y Tato (RF-11):** el Worker ignora a cualquier usuario de Telegram que no esté en la tabla `contactos_permitidos`, y la función de envío solo acepta esos ids. Se controla en código, no en el prompt. Al bot cualquiera lo puede encontrar, pero a los demás no les contesta nada.
 
 ## Modelo de datos (P1)

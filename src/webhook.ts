@@ -1,14 +1,20 @@
 import type { Env } from "./env";
+import { procesarCaptura } from "./procesar";
 import { enviarMensaje, esPermitido, type Update } from "./telegram";
 
 const SOLO_AUDIOS_Y_TEXTOS = "Por ahora entiendo audios y textos.";
 
 /**
- * Recibe los mensajes de Telegram. Guarda la captura y responde enseguida:
- * procesarla (transcribir, extraer ítems, confirmar) es otro paso, así una
- * falla de Groq o de Telegram no pierde nada (RF-13).
+ * Recibe los mensajes de Telegram. Guarda la captura y responde enseguida; el
+ * procesamiento (transcribir, interpretar, confirmar) sigue en segundo plano.
+ * Si falla, la captura queda pendiente y el cron la reintenta (RF-13).
  */
-export async function manejarWebhook(request: Request, env: Env): Promise<Response> {
+export async function manejarWebhook(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+  procesar: typeof procesarCaptura = procesarCaptura,
+): Promise<Response> {
   if (request.method !== "POST") return new Response(null, { status: 405 });
   if (request.headers.get("X-Telegram-Bot-Api-Secret-Token") !== env.TELEGRAM_WEBHOOK_SECRET) {
     return new Response(null, { status: 401 });
@@ -34,10 +40,11 @@ export async function manejarWebhook(request: Request, env: Env): Promise<Respon
     return new Response(null, { status: 200 });
   }
 
-  await env.DB.prepare(
+  const nueva = await env.DB.prepare(
     `INSERT OR IGNORE INTO capturas
        (telegram_user_id, telegram_message_id, responde_a_message_id, tipo, texto, audio_file_id, recibida_en)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?)
+     RETURNING id`,
   )
     .bind(
       mensaje.from.id,
@@ -48,7 +55,9 @@ export async function manejarWebhook(request: Request, env: Env): Promise<Respon
       audio?.file_id ?? null,
       new Date(mensaje.date * 1000).toISOString(),
     )
-    .run();
+    .first<{ id: number }>();
 
+  // Sin fila: Telegram reintentó un mensaje que ya teníamos.
+  if (nueva) ctx.waitUntil(procesar(env, nueva.id));
   return new Response(null, { status: 200 });
 }

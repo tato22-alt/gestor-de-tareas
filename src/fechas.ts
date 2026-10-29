@@ -99,3 +99,9 @@ export function validarFecha(
   const pasada = hora === undefined ? fecha < fechaLocal(ahora) : aUtc(fecha, hora).getTime() < ahora.getTime();
   return pasada ? "pasada" : undefined;
 }
+
+/** Solo la hora argentina: "10:00". */
+export function horaLocal(instante: Date): string {
+  const d = local(instante);
+  return `${dosDigitos(d.getUTCHours())}:${dosDigitos(d.getUTCMinutes())}`;
+}

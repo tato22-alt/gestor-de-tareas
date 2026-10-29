@@ -11,6 +11,12 @@
       "database_id": "00000000-0000-0000-0000-000000000000",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
+  "vars": {
+    // Modelo de Groq para interpretar mensajes. Se confirma en T5 corriendo los escenarios.
+    "GROQ_MODELO": "llama-3.3-70b-versatile"
+  },
+  // Un solo cron: reintentos, avisos y resumen se deciden adentro según la hora.
+  "triggers": { "crons": ["* * * * *"] }
   // Secretos (con `wrangler secret put`): TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET, GROQ_API_KEY.
 }

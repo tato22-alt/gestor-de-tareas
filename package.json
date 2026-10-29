@@ -6,6 +6,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "vitest run",
+    "escenarios": "vitest run test/escenarios.test.ts",
     "typecheck": "tsc --noEmit",
     "db:migrate:local": "wrangler d1 migrations apply asistente --local",
     "db:migrate:remote": "wrangler d1 migrations apply asistente --remote"

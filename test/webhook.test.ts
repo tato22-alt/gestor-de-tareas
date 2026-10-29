@@ -1,6 +1,7 @@
 import { env } from "cloudflare:test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import worker from "../src/index";
+import { manejarWebhook } from "../src/webhook";
+import { limpiarBase } from "./ayuda";
 import { DestinatarioNoPermitido, enviarMensaje } from "../src/telegram";
 
 const PAPA = 111;
@@ -19,7 +20,7 @@ function enviar(cuerpo: unknown, secreto = "secreto-de-prueba") {
     headers: { "content-type": "application/json", "X-Telegram-Bot-Api-Secret-Token": secreto },
     body: JSON.stringify(cuerpo),
   });
-  return worker.fetch(request, env);
+  return manejarWebhook(request, env, ctx, procesarCaptura);
 }
 
 async function capturas() {
@@ -27,20 +28,23 @@ async function capturas() {
   return results;
 }
 
+// El procesamiento en segundo plano se prueba aparte (procesar.test.ts).
+const procesarCaptura = vi.fn(async (_env: unknown, _id: number) => {});
+const ctx = { waitUntil() {}, passThroughOnException() {} } as unknown as ExecutionContext;
+
 let fetchTelegram: ReturnType<typeof vi.spyOn>;
 
 beforeEach(async () => {
-  await env.DB.batch([
-    env.DB.prepare("DELETE FROM capturas"),
-    env.DB.prepare("DELETE FROM contactos_permitidos"),
-    env.DB.prepare("INSERT INTO contactos_permitidos VALUES (?, 'Papá', 'papa')").bind(PAPA),
-  ]);
+  await limpiarBase();
   fetchTelegram = vi
     .spyOn(globalThis, "fetch")
     .mockResolvedValue(Response.json({ ok: true, result: { message_id: 77 } }));
 });
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  procesarCaptura.mockClear();
+});
 
 describe("webhook de Telegram", () => {
   it("rechaza pedidos sin el secreto del webhook", async () => {
@@ -55,6 +59,7 @@ describe("webhook de Telegram", () => {
     expect(await capturas()).toMatchObject([
       { telegram_user_id: PAPA, tipo: "audio", audio_file_id: "AUDIO1", estado: "pendiente", texto: null },
     ]);
+    expect(procesarCaptura).toHaveBeenCalledWith(env, (await capturas())[0]!.id);
   });
 
   it("guarda un texto y a qué mensaje respondía (H2)", async () => {
@@ -66,6 +71,7 @@ describe("webhook de Telegram", () => {
     await enviar(update({ text: "comprar cartuchos" }));
     await enviar(update({ text: "comprar cartuchos" }));
     expect(await capturas()).toHaveLength(1);
+    expect(procesarCaptura).toHaveBeenCalledTimes(1);
   });
 
   it("ignora en silencio a quien no está permitido (RF-11)", async () => {

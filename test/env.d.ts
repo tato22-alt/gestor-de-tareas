@@ -5,6 +5,7 @@ declare global {
   namespace Cloudflare {
     interface Env extends EnvDelAsistente {
       TEST_MIGRATIONS: D1Migration[];
+      GROQ_REAL: string;
     }
   }
 }

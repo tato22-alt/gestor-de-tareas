@@ -58,3 +58,16 @@ export async function enviarMensaje(
   if (!cuerpo.ok || !cuerpo.result) throw new Error(`Telegram sendMessage falló: ${cuerpo.description ?? respuesta.status}`);
   return cuerpo.result.message_id;
 }
+
+/** Baja un archivo (por ejemplo, una nota de voz) a partir de su file_id. */
+export async function descargarArchivo(env: Env, fileId: string): Promise<ArrayBuffer> {
+  const base = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}`;
+  const datos = (await (await fetch(`${base}/getFile?file_id=${encodeURIComponent(fileId)}`)).json()) as {
+    ok: boolean;
+    result?: { file_path: string };
+  };
+  if (!datos.ok || !datos.result) throw new Error(`Telegram getFile falló para ${fileId}`);
+  const archivo = await fetch(`https://api.telegram.org/file/bot${env.TELEGRAM_BOT_TOKEN}/${datos.result.file_path}`);
+  if (!archivo.ok) throw new Error(`No se pudo bajar el archivo ${fileId}: ${archivo.status}`);
+  return archivo.arrayBuffer();
+}
